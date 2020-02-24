@@ -34,6 +34,13 @@ export default {
       passRules: /^\d{3,9}$/
     }
   },
+  created () {
+    const { username, password } = this.$route.params
+    if (username && password) {
+      this.password = password
+      this.username = username
+    }
+  },
   methods: {
     async login () {
       // 校验正确的格式在进行登录

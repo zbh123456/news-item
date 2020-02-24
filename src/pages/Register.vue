@@ -10,13 +10,13 @@
       <hm-input :rules="userRules" err-msg="请输入4-10数字" v-model="username" placeholder="用户名/手机号" type="text"></hm-input>
     </div>
     <div class="nickname">
-      <hm-input :rules="nicknameRules" err-msg="请输入3-9字符" v-model="nickname" placeholder="昵称" type="text"></hm-input>
+      <hm-input :rules="nicknameRules" err-msg="请输入2-4中文" v-model="nickname" placeholder="昵称" type="text"></hm-input>
     </div>
     <div class="password">
       <hm-input :rules="passRules" err-msg="请输入3-9字符" v-model="password" placeholder="密码" type="password"></hm-input>
     </div>
     <div class="enter">
-      <hm-button  @click="login">注册</hm-button>
+      <hm-button  @click="register">注册</hm-button>
       <p class="gologin">没有账号&nbsp;?&nbsp;立即<router-link to="/login">&nbsp;登录&nbsp;</router-link></p>
     </div>
   </div>
@@ -30,13 +30,45 @@ export default {
       password: '',
       nickname: '',
       userRules: /^1\d{3,9}$/,
-      passRules: /^1\d{3,9}$/,
-      nicknameRules: /^\w{3,9}$/
+      passRules: /^\w{3,9}$/,
+      nicknameRules: /^[\u4E00-\u9FA5]{2,4}$/
     }
   },
   methods: {
-    login () {
-      console.log(this.username, this.password, this.nickname)
+    async register () {
+      if (!this.userRules.test(this.username)) {
+        this.$toast('请输入正确的号码')
+        return
+      }
+      if (!this.nicknameRules.test(this.nickname)) {
+        this.$toast('请输入正确的昵称')
+        return
+      }
+      if (!this.passRules.test(this.password)) {
+        this.$toast('请输入正确的密码')
+        return
+      }
+      // 点击注册按钮 要发送axios请求
+      const res = await this.$axios.post('/register', {
+        username: this.username,
+        password: this.password,
+        nickname: this.nickname
+      })
+      // statusCode: 200, message: "注册成功"
+      const { statusCode, message } = res.data
+      if (statusCode === 200) {
+        this.$toast(message)
+        // 跳转到登录页 要求把数据回显在登录页
+        this.$router.push({
+          name: 'login',
+          params: {
+            username: this.username,
+            password: this.password
+          }
+        })
+      } else {
+        this.$toast(message)
+      }
     }
   }
 }
