@@ -65,6 +65,11 @@ export default {
       if (statusCode === 200) {
         // console.log('登录成功')
         this.$toast.success(message)
+        this.$router.push('/Profile')
+        // 登录成功后服务器端会签发一个加密字符串给浏览器  浏览器存储到本地
+        const { token, user } = res.data.data
+        localStorage.setItem('token', token)
+        localStorage.setItem('user_id', user.id)
       } else {
         // console.log('登录失败')
         this.$toast.fail(message)
