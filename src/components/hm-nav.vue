@@ -1,5 +1,5 @@
 <template>
-  <div class="hm-nav">
+  <div class="hm-nav" @click="changeClick">
     <div class="item">
       <span>{{ name }}</span>
       <span class="center">{{ info }}</span>
@@ -20,6 +20,11 @@ export default {
       type: String
     }
 
+  },
+  methods: {
+    changeClick (e) {
+      this.$emit('click', e)
+    }
   }
 }
 </script>

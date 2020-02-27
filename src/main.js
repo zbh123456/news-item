@@ -16,9 +16,11 @@ import HmButton from 'components/hm-button.vue'
 
 import HmNav from 'components/hm-nav.vue'
 
+import HmHeader from 'components/hm-header.vue'
+
 import axios from 'axios'
 
-import { Toast, Button, Dialog } from 'vant'
+import { Toast, Button, Dialog, Field, Icon, RadioGroup, Radio, Uploader } from 'vant'
 
 import moment from 'moment'
 
@@ -30,6 +32,8 @@ Vue.component('HmButton', HmButton)
 
 Vue.component('HmNav', HmNav)
 
+Vue.component('HmHeader', HmHeader)
+
 Vue.filter('time', function (value) {
   return moment(value).format('YYYY-MM-DD')
 })
@@ -39,18 +43,28 @@ Vue.prototype.$axios = axios
 Vue.use(Toast)
 Vue.use(Button)
 Vue.use(Dialog)
+Vue.use(Field)
+Vue.use(Icon)
+Vue.use(RadioGroup)
+Vue.use(Radio)
+Vue.use(Uploader)
 
 // axios.default.baseUrl = 'http://localhost:3000' 错误写法
 axios.defaults.baseURL = 'http://localhost:3000'
 
 // 添加请求拦截器
-// axios.interceptors.request.use(function (config) {
-//   // 在发送请求之前做些什么
-//   return config;
-// }, function (error) {
-//   // 对请求错误做些什么
-//   return Promise.reject(error);
-// });
+axios.interceptors.request.use(function (config) {
+  // 在发送请求之前做些什么
+  const token = localStorage.getItem('token')
+  // console.log(config.headers.Authorization)
+  if (token) {
+    config.headers.Authorization = token
+  }
+  return config
+}, function (error) {
+  // 对请求错误做些什么
+  return Promise.reject(error)
+})
 
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {

@@ -2,7 +2,7 @@ import VueRouter from 'vue-router'
 import Vue from 'vue'
 import Login from '../pages/Login.vue'
 import Register from '../pages/Register.vue'
-import Profile from '../pages/Profile.vue'
+import Profile from '../pages/profile.vue'
 import EditProfile from '../pages/Edit-Profile.vue'
 
 Vue.use(VueRouter)
@@ -16,7 +16,7 @@ const router = new VueRouter({
     { path: '/edit-profile', component: EditProfile, name: 'edit-profile' }
   ]
 })
-const AuthUrl = ['/profile']
+const AuthUrl = ['/profile', '/edit-profile']
 
 router.beforeEach((to, from, next) => {
   if (AuthUrl.includes(to.path)) {
