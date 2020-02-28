@@ -31,14 +31,31 @@
         <van-radio :name="0">女</van-radio>
       </van-radio-group>
      </van-dialog>
+     <div class="croppicture" v-show="isShowMask">
+      <vueCropper
+        ref="cropper"
+        :img="option.img"
+        :canScale="option.canScale"
+        :autoCrop="option.autoCrop"
+        :autoCropWidth="option.autoCropWidth"
+        :autoCropHeight="option.autoCropHeight"
+        :fixedNumber="option.fixedNumber"
+    ></vueCropper>
+    <van-button class="crop" type="danger" @click="crop">确定裁剪</van-button>
+    <van-button class="cancelcrop" type="primary" @click="cancel">取消裁剪</van-button>
+    </div>
    </div>
 </template>
 <script>
+import { VueCropper } from 'vue-cropper'
 export default {
   computed: {
     imgUrl () {
       return this.$axios.defaults.baseURL + this.profile.head_img
     }
+  },
+  components: {
+    VueCropper
   },
   data () {
     return {
@@ -49,22 +66,52 @@ export default {
       gender: '',
       isShowgender: false,
       isShowpassword: false,
-      isChangeType: false
+      isChangeType: false,
+      option: {
+        img: '', // 这个img应该要是上传的那张图片，只不过现在我写死了 ------ 必填
+        canScale: true, // 图片是否允许滚轮缩放
+        autoCrop: true, // 是否默认生成截图框 ------- 需要
+        autoCropWidth: 150, // 默认生成截图框宽度
+        autoCropHeight: 150, // 默认生成截图框高度
+        fixedNumber: [1, 1] // 截图框的宽高比例
+      },
+      isShowMask: false
     }
   },
   created () {
     this.Redenderprofile()
   },
   methods: {
+    async crop () {
+      this.$refs.cropper.getCropBlob(async picture => {
+        // data就是我们裁剪出来的图片
+        const fl = new FormData()
+        fl.append('file', picture)
+        const res = await this.$axios.post('/upload', fl)
+        const { statusCode, data } = res.data
+        if (statusCode === 200) {
+          this.editProfile({ head_img: data.url })
+        }
+        // console.log(res)
+      })
+      this.isShowMask = false
+    },
+    cancel () {
+      this.isShowMask = false
+    },
     async afterRead (file) {
-    // console.log(file.file)
-      const fl = new FormData()
-      fl.append('file', file.file)
-      const res = await this.$axios.post('/upload', fl)
-      const { statusCode, data } = res.data
-      if (statusCode === 200) {
-        this.editProfile({ head_img: data.url })
-      }
+      // console.log(file.file)
+      // const fl = new FormData()
+      // fl.append('file', file.file)
+      // const res = await this.$axios.post('/upload', fl)
+      // const { statusCode, data } = res.data
+      // if (statusCode === 200) {
+      //   this.editProfile({ head_img: data.url })
+      // }
+      // console.log(file.content)
+
+      this.isShowMask = true
+      this.option.img = file.content
     },
     editgender () {
       this.editProfile({ gender: this.gender })
@@ -161,6 +208,24 @@ export default {
     .van-radio-group {
       justify-content: space-around;
       margin:20px 0 ;
+    }
+  }
+  .croppicture{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    .crop{
+      position:absolute;
+      right:30px;
+      bottom:10px;
+    }
+    .cancelcrop{
+      position:absolute;
+      left:30px;
+      bottom:10px;
     }
   }
 }

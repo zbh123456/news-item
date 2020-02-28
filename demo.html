@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>{{ msg }}</h1>
+      <button ref="p" @click="fn">按钮</button>
+      <demo ref="demo" :obj="obj"></demo>
+    </div>
+
+    <script src="../1自己的练习资料/就业班/vue/vue第一天/vue.js"></script>
+    <script>
+
+      Vue.component('demo',{
+        template:
+        `<div class="demo">我是demo组件---{{ obj.age}}</div>`,
+        props:['obj'],
+        methods:{
+          sayHi(){
+            console.log('你好')
+            
+          }
+        }
+      })
+      const vm = new Vue({
+        el: '#app',
+        data: {
+          msg: 'hello vue',
+          obj:{
+            age:'18',
+            sayHi(){
+              console.log('我是hello')
+            }
+          }
+        },
+        // ref 和$refs配合使用 可以用于获取dom元素或者vue组件实例
+        methods:{
+          fn () {
+            // console.log(this.$refs.p.innerHTML)
+            console.log(this.$refs.demo)
+           this.$refs.demo.sayHi()
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

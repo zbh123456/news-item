@@ -24,9 +24,9 @@
       </div>
     </div>
     <div class="profile-bottom">
-      <hm-nav name="我的关注" info="关注的用户"></hm-nav>
-      <hm-nav name="我的跟帖" info="跟帖/回复"></hm-nav>
-      <hm-nav name="我的收藏" info="文章/视频"></hm-nav>
+      <hm-nav name="我的关注" info="关注的用户" @click="$router.push('/concern')"></hm-nav>
+      <hm-nav name="我的跟帖" info="跟帖/回复" @click="$router.push('/comment')"></hm-nav>
+      <hm-nav name="我的收藏" info="文章/视频" @click="$router.push('/collect')"></hm-nav>
       <hm-nav name="设置" @click="$router.push('/edit-profile')"></hm-nav>
     </div>
     <div class="logout" @click="logout">
