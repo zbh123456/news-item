@@ -1,17 +1,23 @@
 <template>
+<!-- 跟帖的处理 -->
   <div class="collect">
     <hm-header>我的收藏</hm-header>
-    <div class="list">
+    <hm-post v-for="item in collectList" :key="item.id" :post="item"></hm-post>
+    <!-- <div class="list" v-for="item in collectList" :key="item.id">
       <div class="info">
-        <p class="context">林志玲穿透视黑纱裙米兰看秀腹部微隆显孕味</p>
-        <span>火星时报</span>
-        <span>52跟帖</span>
+        <div  class="context">
+        <p class="txt-cut">{{ item.title }}</p>
+        </div>
+         <div class="bottom">
+           <span>{{ item.user.nickname }}</span>
+           <span>{{ item.comments.length}}跟帖</span>
+         </div>
       </div>
       <div class="picture">
-        <img src="~assets/01.jpg" alt />
+        <img :src="item.cover[0].url" alt />
       </div>
-    </div>
-    <div class="item">
+    </div> -->
+    <!-- <div class="item" >
       <div class="content">
         <span>亚马逊雨林为何燃烧？除了新总统“急功近利”的开发，国际资本才是真凶</span>
       </div>
@@ -22,7 +28,7 @@
       </div>
        <span>火星时报</span>
        <span>52跟帖</span>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -36,10 +42,13 @@ export default {
   async created () {
     const res = await this.$axios.get('/user_star')
     const { statusCode, data } = res.data
-    console.log(res.data)
 
     if (statusCode === 200) {
+      data.forEach(item => {
+        item.comment_length = item.comments.length
+      })
       this.collectList = data
+      // console.log(this.collectList)
     }
   }
 }
@@ -53,12 +62,11 @@ export default {
     display: flex;
     .info{
       flex:1;
+      display:flex;
+      flex-direction: column;
+      justify-content: space-between;
       .context{
         font-size:14px;
-        margin-bottom:8px;
-        span{
-          padding:0;
-        }
       }
       span{
         color:#868686;
@@ -66,9 +74,12 @@ export default {
       }
     }
     .picture {
-      img{
       width: 120px;
       height: 75px;
+      img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
       }
     }
   }

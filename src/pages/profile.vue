@@ -5,6 +5,7 @@
   <!-- 4 个人中心实现登录拦截 如果是没有登录的用户不能访问个人中心route.beforeEach -->
   <!-- 5 拦截器 拦截token过期的用户 -->
   <div class="profile">
+    <hm-header>个人中心</hm-header>
     <div class="profile-top" @click="$router.push('/edit-profile')">
       <div class="photo">
         <img :src="imgUrl" alt />

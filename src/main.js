@@ -18,9 +18,11 @@ import HmNav from 'components/hm-nav.vue'
 
 import HmHeader from 'components/hm-header.vue'
 
+import HmPost from 'components/hm-post.vue'
+
 import axios from 'axios'
 
-import { Toast, Button, Dialog, Field, Icon, RadioGroup, Radio, Uploader } from 'vant'
+import { Toast, Button, Dialog, Field, Icon, RadioGroup, Radio, Uploader, List, Tab, Tabs } from 'vant'
 
 import moment from 'moment'
 
@@ -34,8 +36,10 @@ Vue.component('HmNav', HmNav)
 
 Vue.component('HmHeader', HmHeader)
 
-Vue.filter('time', function (value) {
-  return moment(value).format('YYYY-MM-DD')
+Vue.component('HmPost', HmPost)
+
+Vue.filter('time', function (value, str = 'YYYY-MM-DD') {
+  return moment(value).format(str)
 })
 
 Vue.prototype.$axios = axios
@@ -48,8 +52,10 @@ Vue.use(Icon)
 Vue.use(RadioGroup)
 Vue.use(Radio)
 Vue.use(Uploader)
+Vue.use(List)
+Vue.use(Tab)
+Vue.use(Tabs)
 
-// axios.default.baseUrl = 'http://localhost:3000' 错误写法
 axios.defaults.baseURL = 'http://localhost:3000'
 
 // 添加请求拦截器
