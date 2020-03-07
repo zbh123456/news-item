@@ -14,6 +14,7 @@ import Comment from 'pages/Comment.vue'
 import Home from 'pages/Home.vue'
 import Column from 'pages/Column.vue'
 import Detail from 'pages/Detail.vue'
+import Search from 'pages/Search.vue'
 
 Vue.use(VueRouter)
 
@@ -33,7 +34,8 @@ const router = new VueRouter({
     { path: '/comment', component: Comment, name: 'comment' },
     { path: '/home', component: Home, name: 'home' },
     { path: '/column', component: Column, name: 'column' },
-    { path: '/detail/:id', component: Detail, name: 'detail' }
+    { path: '/detail/:id', component: Detail, name: 'detail' },
+    { path: '/search', component: Search, name: 'search' }
   ]
 })
 const AuthUrl = ['/profile', '/edit-profile', '/concern', '/comment', '/collect']

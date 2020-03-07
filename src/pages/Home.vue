@@ -14,7 +14,7 @@
       <div class="logo">
         <i class="iconfont iconnew"></i>
       </div>
-      <div class="search">
+      <div class="search" @click="$router.push('/search')">
         <i class="iconfont iconsearch"></i>
         <input type="text" placeholder="搜索新闻" />
       </div>
@@ -69,8 +69,20 @@ export default {
     }
   },
   async created () {
-    await this.getHome()
-    // 问题一 id获取不到 因为上面的axios是异步的 数据的结果还没回来
+    const firstlist = JSON.parse(localStorage.getItem('list'))
+    if (firstlist) {
+      firstlist.forEach(item => {
+        item.posts = []
+        item.pageIndex = 1
+        item.loading = false
+        item.finished = false
+        item.isLoading = false
+      })
+      this.list = firstlist
+    } else {
+      await this.getHome()
+      // 问题一 id获取不到 因为上面的axios是异步的 数据的结果还没回来
+    }
     this.getPost()
   },
   methods: {

@@ -4,20 +4,13 @@
     <div class="info">
       <div class="delchannel">点击删除以下频道</div>
       <ul>
-        <li v-for="item in list" :key="item.id">{{item.name}}</li>
+        <li @click="del(index)" v-for="(item,index) in list" :key="item.id">{{item.name}}</li>
       </ul>
     </div>
     <div class="content">
       <div class="addchannel">点击添加以下频道</div>
       <ul>
-        <li>推荐</li>
-        <li>推荐</li>
-        <li>推荐</li>
-        <li>推荐</li>
-        <li>推荐</li>
-        <li>推荐</li>
-        <li>推荐</li>
-        <li>推荐</li>
+        <li @click="add(index)" v-for="(item,index) in lastlist" :key="item.id">{{item.name}}</li>
       </ul>
      </div>
   </div>
@@ -26,11 +19,19 @@
 <script>
 export default {
   created () {
-    this.getlist()
+    const list = JSON.parse(localStorage.getItem('list'))
+    const lastlist = JSON.parse(localStorage.getItem('lastlist'))
+    if (list && lastlist) {
+      this.list = list
+      this.lastlist = lastlist
+    } else {
+      this.getlist()
+    }
   },
   data () {
     return {
-      list: {}
+      list: [],
+      lastlist: []
     }
   },
   methods: {
@@ -40,6 +41,21 @@ export default {
       if (statusCode === 200) {
         this.list = data
       }
+    },
+    del (index) {
+      this.lastlist.push(this.list[index])
+      this.list.splice(index, 1)
+    },
+    add (index) {
+      this.list.push(this.lastlist[index])
+      this.lastlist.splice(index, 1)
+    }
+
+  },
+  watch: {
+    list () {
+      localStorage.setItem('list', JSON.stringify(this.list))
+      localStorage.setItem('lastlist', JSON.stringify(this.lastlist))
     }
   }
 }

@@ -22,7 +22,7 @@ import HmPost from 'components/hm-post.vue'
 
 import axios from 'axios'
 
-import { Toast, Button, Dialog, Field, Icon, RadioGroup, Radio, Uploader, List, Tab, Tabs, PullRefresh } from 'vant'
+import { Toast, Button, Dialog, Field, Icon, RadioGroup, Radio, Uploader, List, Tab, Tabs, PullRefresh, Search } from 'vant'
 
 import moment from 'moment'
 
@@ -73,6 +73,7 @@ Vue.use(List)
 Vue.use(Tab)
 Vue.use(PullRefresh)
 Vue.use(Tabs)
+Vue.use(Search)
 
 axios.defaults.baseURL = 'http://localhost:3000'
 

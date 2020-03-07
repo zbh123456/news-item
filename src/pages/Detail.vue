@@ -3,10 +3,10 @@
   <div class="detail">
     <div class="header">
       <div class="left">
-        <i class="iconfont iconjiantou2" @click="$router.push('/')"></i>
+        <i class="iconfont iconjiantou2" @click="$router.go(-1)"></i>
       </div>
       <div class="center">
-        <i class="iconfont iconnew" @click="$router.push('/')"></i>
+        <i class="iconfont iconnew" @click="$router.go(-1)"></i>
       </div>
       <div class="right">
         <div class="followed" v-if="list.has_follow" @click="followed" >已关注</div>
