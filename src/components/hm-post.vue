@@ -1,5 +1,5 @@
 <template>
-  <div class="hm-post">
+  <div class="hm-post" @click="handleClick">
     <!-- 视频的渲染 -->
     <div class="video" v-if="post.type === 2">
       <div class="info">
@@ -56,6 +56,11 @@ export default {
   props: {
     post: {
       type: Object
+    }
+  },
+  methods: {
+    handleClick () {
+      this.$emit('click')
     }
   }
 }

@@ -7,6 +7,7 @@
 <!-- 5 tab栏下的数据渲染 进行组件封装 -->
 <!-- 6 收藏优化 -->
 <!-- 7 首页的分页功能 -->
+<!-- 8 下拉刷新功能完成 -->
    <div class="home">
     <!-- 头部 -->
     <div class="header">
@@ -22,17 +23,37 @@
       </div>
     </div>
     <!-- 导航 -->
+    <van-icon name="arrow-down" size="25px" @click="$router.push('/column')"/>
     <van-tabs v-model="active" sticky animated swipeable background="#e4e4e4">
       <van-tab :title="item.name" v-for="item in list" :key="item.id">
-        <van-list
-          v-model="item.loading"
-          :finished="item.finished"
-          finished-text="没有更多了"
-          :offset="50"
-          :immediate-check="false"
-          @load="onLoad">
-        <hm-post v-for="item in item.posts" :key="item.id" :post="item"></hm-post>
-        </van-list>
+        <van-pull-refresh v-model="item.isLoading" @refresh="onRefresh" :head-height="150">
+          <!-- 下拉提示，通过 scale 实现一个缩放效果 -->
+          <img
+            class="doge"
+            slot="pulling"
+            slot-scope="props"
+            src="https://img.yzcdn.cn/vant/doge.png"
+            :style = "{transform:`scale(${props.distance / 80})`}">
+          <!-- 释放提示 -->
+          <img
+            class="doge"
+            slot="loosing"
+            src="https://img.yzcdn.cn/vant/doge.png">
+            <!-- 加载提示 -->
+            <img
+              class="doge"
+              slot="loading"
+              src="https://img.yzcdn.cn/vant/doge-fire.jpg">
+          <van-list
+            v-model="item.loading"
+            :finished="item.finished"
+            finished-text="没有更多了"
+            :offset="50"
+            :immediate-check="false"
+            @load="onLoad">
+           <hm-post v-for="post in item.posts" :key="post.id" :post="post" @click="$router.push(`/detail/${post.id}`)"></hm-post>
+          </van-list>
+        </van-pull-refresh>
       </van-tab>
     </van-tabs>
   </div>
@@ -53,6 +74,15 @@ export default {
     this.getPost()
   },
   methods: {
+    onRefresh () {
+      const index = this.active
+      // 下拉刷新应该做什么 初始化数据
+      this.list[index].pageIndex = 1
+      this.list[index].loading = true
+      this.list[index].finished = false
+      this.list[index].posts = []
+      this.getPost()
+    },
     async getHome () {
       const res = await this.$axios.get('/category')
       const { statusCode, data } = res.data
@@ -70,6 +100,7 @@ export default {
           item.pageIndex = 1
           item.loading = false
           item.finished = false
+          item.isLoading = false
         })
         this.list = data
       }
@@ -91,11 +122,12 @@ export default {
         // 将请求回来的数据缓存到posts中 如果已经缓存的就不需要重复缓存
         this.list[index].posts = [...this.list[index].posts, ...data]
         this.list[index].loading = false
+        this.list[index].isLoading = false
         if (data.length < this.pageSize) {
           this.list[index].finished = true
         }
       }
-      console.log(res.data)
+      // console.log(res.data)
     },
     onLoad () {
       const index = this.active
@@ -106,7 +138,10 @@ export default {
   },
   watch: {
     active (value) {
-      if (this.list[value].length > 0) return
+      this.list[value].loading = false
+      this.list[value].finished = false
+      // if (this.list[value].length > 0) return
+      if (this.list[value].posts.length > 0) return
       this.getPost()
     }
   }
@@ -154,6 +189,27 @@ export default {
       }
     }
   }
-
+  .van-icon {
+    float:right;
+    position:sticky;
+    z-index:999;
+    top:0;
+    width:40px;
+    height:44px;
+    line-height: 44px;
+    text-align:center;
+    background-color: #e4e4e4;
+  }
 }
+.doge {
+  width: 140px;
+  height: 72px;
+  margin: 5px auto;
+  border-radius: 4px;
+}
+</style>
+.<style lang="scss">
+ .van-sticky{
+   padding-right:40px;
+ }
 </style>

@@ -22,7 +22,7 @@ import HmPost from 'components/hm-post.vue'
 
 import axios from 'axios'
 
-import { Toast, Button, Dialog, Field, Icon, RadioGroup, Radio, Uploader, List, Tab, Tabs } from 'vant'
+import { Toast, Button, Dialog, Field, Icon, RadioGroup, Radio, Uploader, List, Tab, Tabs, PullRefresh } from 'vant'
 
 import moment from 'moment'
 
@@ -42,6 +42,23 @@ Vue.filter('time', function (value, str = 'YYYY-MM-DD') {
   return moment(value).format(str)
 })
 
+Vue.filter('fixUrl', function (value) {
+  return axios.defaults.baseURL + value
+})
+
+Vue.directive('focus', {
+  inserted (el) {
+    el.focus()
+  }
+})
+Vue.filter('second', function (value) {
+  var now = new Date()
+  var date = new Date(value)
+  var deltaInSeconds = Math.floor((now - date) / 1000)
+  var hours = Math.floor(deltaInSeconds / 60 / 60) % 24
+  return hours
+})
+
 Vue.prototype.$axios = axios
 
 Vue.use(Toast)
@@ -54,6 +71,7 @@ Vue.use(Radio)
 Vue.use(Uploader)
 Vue.use(List)
 Vue.use(Tab)
+Vue.use(PullRefresh)
 Vue.use(Tabs)
 
 axios.defaults.baseURL = 'http://localhost:3000'

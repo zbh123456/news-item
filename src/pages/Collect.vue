@@ -2,7 +2,7 @@
 <!-- 跟帖的处理 -->
   <div class="collect">
     <hm-header>我的收藏</hm-header>
-    <hm-post v-for="item in collectList" :key="item.id" :post="item"></hm-post>
+    <hm-post v-for="post in collectList" :key="post.id" :post="post"></hm-post>
     <!-- <div class="list" v-for="item in collectList" :key="item.id">
       <div class="info">
         <div  class="context">
